@@ -8,6 +8,7 @@ const internSchema = new mongoose.Schema({
     },
     email: {
         type: String,
+        lowercase:true,
         required: [true,"Email is required"],
         unique: true
     },

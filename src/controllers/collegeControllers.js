@@ -33,8 +33,8 @@ const createCollege = async (req, res) => {
         msg: "Please provide valid fullName of the college",
       });
     }
-
-    if (!validator.isURL(logoLink)) {
+    
+    if (!(isValid(logoLink) && validator.isURL(logoLink))) {
       return res
         .status(400)
         .send({ status: false, msg: "Please provide valid link for the logo" });
@@ -52,7 +52,7 @@ const createCollege = async (req, res) => {
 
     let result = await collegeModel.create(college);
 
-    res.status(201).send({ status: true, data: result });
+    res.status(201).send({ status: true, "data": result });
   } catch (err) {
     console.log(err.message);
     res.status(500).send({ status: false, msg: err.message });

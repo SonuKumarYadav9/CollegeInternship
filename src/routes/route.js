@@ -8,6 +8,6 @@ router.post("/functionup/colleges",collegeController.createCollege)
 router.post("/functionup/interns",internControllers.createInterns)
 
 //GET API TO FETCH THE COLLEGE DETAILS
-router.get("/functionup/collegeDetails",collegeController.getCollege)
+// router.get("/functionup/collegeDetails",collegeController.getCollege)
 
 module.exports=router;
