@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const validator = require("validator");
 const collegeModel = require("../models/collegeModel");
 
@@ -59,3 +58,8 @@ const createCollege = async (req, res) => {
     res.status(500).send({ status: false, msg: err.message });
   }
 };
+
+
+module.exports = {
+  createCollege:createCollege
+}
