@@ -1,5 +1,5 @@
 const internModel = require("../models/internModel");
-const collegeModel = require("../models/collegeModel")
+const collegeModel = require("../models/collegeModel");
 const validator = require("validator");
 const phone = require("libphonenumber-js");
 
@@ -23,7 +23,7 @@ const createInterns = async (req, res) => {
     if (!isValid(name)) {
       return res
         .status(400)
-        .send({ status: false, message: "Please enter a valid Name 🚫" });
+        .send({ status: false, message: "Please enter a valid Name " });
     }
     if (!(isValid(mobile) && phone.isValidNumber(mobile))) {
       return res.status(400).send({
@@ -32,7 +32,7 @@ const createInterns = async (req, res) => {
           "Please enter a valid Mobile Number with a valid country code🚫",
       });
     }
-    if (!(isValid(email)&&validator.isEmail(email))) {
+    if (!(isValid(email) && validator.isEmail(email))) {
       return res
         .status(400)
         .send({ status: false, message: "Please enter a valid Email Id 🚫" });
@@ -44,7 +44,7 @@ const createInterns = async (req, res) => {
         .send({ status: false, message: "Enter a valid college name 🚫" });
     }
 
-    let isDuplicateEmail = await internModel.findOne({ email })
+    let isDuplicateEmail = await internModel.findOne({ email });
 
     if (isDuplicateEmail) {
       return res.status(400).send({
@@ -53,7 +53,7 @@ const createInterns = async (req, res) => {
       });
     }
 
-    let isDuplicateMobile = await internModel.findOne({ mobile })
+    let isDuplicateMobile = await internModel.findOne({ mobile });
 
     if (isDuplicateMobile) {
       return res.status(400).send({
@@ -62,25 +62,25 @@ const createInterns = async (req, res) => {
       });
     }
     let collegeId = await collegeModel
-      .findOne({name:collegeName})
+      .findOne({ name: collegeName })
       .select({ _id: 1 });
 
-    if(!collegeId) {
+    if (!collegeId) {
       return res.status(400).send({
         status: false,
         message: "There is no college with this name 🚫",
       });
     }
 
-    collegeId = collegeId["_id"]
+    collegeId = collegeId["_id"];
 
     data = { name, mobile, email, collegeId };
 
-    let result = await internModel.create(data)
-    return res.status(201).send({ status: true, "data": result });
+    let result = await internModel.create(data);
+    return res.status(201).send({ status: true, data: result });
   } catch (error) {
     res.status(500).send({ status: false, message: error.message });
   }
 };
 
-module.exports.createInterns = createInterns
+module.exports.createInterns = createInterns;

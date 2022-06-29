@@ -1,5 +1,6 @@
 const validator = require("validator");
 const collegeModel = require("../models/collegeModel");
+const internModel = require("../models/internModel"); 
 
 const isValid = (ele) => {
   if (typeof ele == "string" && ele.trim().length) return true;
@@ -33,7 +34,7 @@ const createCollege = async (req, res) => {
         msg: "Please provide valid fullName of the college",
       });
     }
-    
+
     if (!(isValid(logoLink) && validator.isURL(logoLink))) {
       return res
         .status(400)
@@ -52,7 +53,7 @@ const createCollege = async (req, res) => {
 
     let result = await collegeModel.create(college);
 
-    res.status(201).send({ status: true, "data": result });
+    res.status(201).send({ status: true, data: result });
   } catch (err) {
     console.log(err.message);
     res.status(500).send({ status: false, msg: err.message });
@@ -60,6 +61,61 @@ const createCollege = async (req, res) => {
 };
 
 
+const getCollege = async (req, res) => {
+  try {
+    let data = req.query;
+    let key = Object.keys(data);
+
+    if (!key.length) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Please provide valid query params" });
+    }
+    if (key.length > 1) {
+      return res
+        .status(400)
+        .send({
+          status: false,
+          msg: "Only collegeName query parameter is accepted",
+        });
+    }
+    if (!key.includes("collegeName")) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "collegeName is missing in query params" });
+    }
+
+    let value = data.collegeName;
+
+    let collegeData = await collegeModel.findOne({ name: value });
+
+    if (!collegeData) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "No such college exists" });
+    }
+    const id = collegeData["_id"];
+
+    let internData = await internModel
+      .find({ collegeId: id })
+      .select({ name: 1, email: 1, mobile: 1 });
+
+    const { name, fullName, logoLink } = collegeData;
+
+    const result = {
+      name,
+      fullName,
+      logoLink,
+      internData,
+    };
+    return res.status(200).send({ data: result });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send({ status: false, msg: err.message });
+  }
+};
+
 module.exports = {
-  createCollege:createCollege
-}
+  createCollege: createCollege,
+  getCollege: getCollege,
+};
