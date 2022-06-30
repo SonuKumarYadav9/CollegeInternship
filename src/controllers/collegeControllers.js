@@ -94,6 +94,12 @@ const getCollege = async (req, res) => {
         message: "collegeName is missing in query params 🚫",
       });
     }
+    if (!isValid(data.collegeName)) {
+      return res.status(400).send({
+        status: false,
+        message: "collegeName value is missing in query params 🚫",
+      });
+    }
 
     let value = data.collegeName;
 
@@ -114,6 +120,10 @@ const getCollege = async (req, res) => {
       .select({ name: 1, email: 1, mobile: 1 });
 
     const { name, fullName, logoLink } = collegeData;
+
+    if (!internData.length) {
+      internData = "No one hs applied for internship in this college";
+    }
 
     const result = {
       name,
