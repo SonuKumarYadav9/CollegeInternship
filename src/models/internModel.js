@@ -5,17 +5,17 @@ const internSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Intern Name is required"],
+      required: "Intern Name is required",
     },
     email: {
       type: String,
       lowercase: true,
-      required: [true, "Email is required"],
+      required: "Email is required",
       unique: true,
     },
     mobile: {
-      type: Number,
-      required: [true, "Mobile is required"],
+      type: String,
+      required: "Mobile is required",
       unique: true,
     },
     collegeId: {

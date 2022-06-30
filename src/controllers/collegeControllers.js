@@ -15,30 +15,36 @@ const createCollege = async (req, res) => {
     if (!check.length) {
       return res.status(400).send({
         status: false,
-        msg: "Please provide valid data in the request body",
+        message: "Please provide valid data in the request body 🚫",
       });
     }
 
-    const { name, fullName, logoLink } = data;
+    let { name, fullName, logoLink } = data;
+    
+    name = name.trim()
+    fullName =fullName.trim()
 
-    if (!isValid(name)) {
+    let nameRegex = /^[a-zA-Z]{2,10}$/
+    let fNameRegex = /^[a-zA-Z]{10,120}$/
+
+    if (!(isValid(name) && nameRegex.test(name) && !name.match(" "))) {
       return res.status(400).send({
         status: false,
-        msg: "Please provide a valid name of the college",
+        message: "Please provide a valid name of the college 🚫",
       });
     }
 
-    if (!isValid(fullName)) {
+    if (!(isValid(fullName) && fNameRegex.test(fullName))) {
       return res.status(400).send({
         status: false,
-        msg: "Please provide valid fullName of the college",
+        message: "Please provide valid fullName of the college 🚫",
       });
     }
 
     if (!(isValid(logoLink) && validator.isURL(logoLink))) {
       return res
         .status(400)
-        .send({ status: false, msg: "Please provide valid link for the logo" });
+        .send({ status: false, message: "Please provide valid link for the logo 🚫" });
     }
 
     let checkName = await collegeModel.findOne({ name });
@@ -46,7 +52,7 @@ const createCollege = async (req, res) => {
     if (checkName) {
       return res.status(400).send({
         status: false,
-        msg: "Please use a different name",
+        message: "Please use a different name 🚫",
       });
     }
     let college = { name, fullName, logoLink };
@@ -56,7 +62,7 @@ const createCollege = async (req, res) => {
     res.status(201).send({ status: true, data: result });
   } catch (err) {
     console.log(err.message);
-    res.status(500).send({ status: false, msg: err.message });
+    res.status(500).send({ status: false, message: err.message });
   }
 };
 
@@ -69,20 +75,20 @@ const getCollege = async (req, res) => {
     if (!key.length) {
       return res
         .status(400)
-        .send({ status: false, msg: "Please provide valid query params" });
+        .send({ status: false, message: "Please provide valid query params 🚫" });
     }
     if (key.length > 1) {
       return res
         .status(400)
         .send({
           status: false,
-          msg: "Only collegeName query parameter is accepted",
+          message: "Only collegeName query parameter is accepted 🚫",
         });
     }
     if (!key.includes("collegeName")) {
       return res
         .status(400)
-        .send({ status: false, msg: "collegeName is missing in query params" });
+        .send({ status: false, message: "collegeName is missing in query params 🚫" });
     }
 
     let value = data.collegeName;
@@ -92,7 +98,7 @@ const getCollege = async (req, res) => {
     if (!collegeData) {
       return res
         .status(400)
-        .send({ status: false, msg: "No such college exists" });
+        .send({ status: false, message: "No such college exists 🚫" });
     }
     const id = collegeData["_id"];
 
@@ -111,7 +117,7 @@ const getCollege = async (req, res) => {
     return res.status(200).send({ data: result });
   } catch (err) {
     console.log(err.message);
-    res.status(500).send({ status: false, msg: err.message });
+    res.status(500).send({ status: false, message: err.message });
   }
 };
 

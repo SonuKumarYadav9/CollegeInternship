@@ -1,7 +1,6 @@
 const internModel = require("../models/internModel");
 const collegeModel = require("../models/collegeModel");
 const validator = require("validator");
-const phone = require("libphonenumber-js");
 
 const isValid = (ele) => {
   if (typeof ele == "string" && ele.trim().length) return true;
@@ -12,6 +11,9 @@ const createInterns = async (req, res) => {
   try {
     let data = req.body;
 
+    let nameRegex = /^[a-zA-Z]{3,20}$/
+    let mobileRegex=/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/
+
     if (!Object.keys(data).length) {
       return res.status(400).send({
         status: false,
@@ -20,12 +22,13 @@ const createInterns = async (req, res) => {
     }
     const { name, mobile, email, collegeName } = data;
 
-    if (!isValid(name)) {
+    if (!nameRegex.test(name)) {
       return res
         .status(400)
-        .send({ status: false, message: "Please enter a valid Name " });
+        .send({ status: false, message: "Please enter a valid Name 🚫" });
     }
-    if (!(isValid(mobile) && phone.isValidNumber(mobile))) {
+
+    if (!(isValid(mobile) &&  mobileRegex.test(mobile))) {
       return res.status(400).send({
         status: false,
         message:
