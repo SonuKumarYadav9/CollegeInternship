@@ -8,9 +8,12 @@ const app = express();
 app.use(bodyParser.json());
 
 mongoose
-  .connect("mongodb+srv://dkumardb:abngf_1996@cluster0.g7ksvc2.mongodb.net/project-2?retryWrites=true&w=majority", {
-    useNewUrlParser: true,
-  })
+  .connect(
+    "mongodb+srv://dkumardb:abngf_1996@cluster0.g7ksvc2.mongodb.net/project-2?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+    }
+  )
   .then(() => console.log("Connected"))
   .catch((err) => console.log(err));
 

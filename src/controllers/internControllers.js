@@ -11,8 +11,8 @@ const createInterns = async (req, res) => {
   try {
     let data = req.body;
 
-    let nameRegex = /^[a-zA-Z]+\s?[a-zA-Z]+\s?[a-zA-Z]{1,20}$/
-    let mobileRegex=/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/
+    let nameRegex = /^[a-zA-Z]+\s?[a-zA-Z]+\s?[a-zA-Z]{1,20}$/;
+    let mobileRegex = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/;
 
     if (!Object.keys(data).length) {
       return res.status(400).send({
@@ -28,7 +28,7 @@ const createInterns = async (req, res) => {
         .send({ status: false, message: "Please enter a valid Name 🚫" });
     }
 
-    if (!(isValid(mobile) &&  mobileRegex.test(mobile))) {
+    if (!(isValid(mobile) && mobileRegex.test(mobile))) {
       return res.status(400).send({
         status: false,
         message:
@@ -65,7 +65,7 @@ const createInterns = async (req, res) => {
       });
     }
     let collegeId = await collegeModel
-      .findOne({ name: collegeName, isDeleted:false })
+      .findOne({ name: collegeName, isDeleted: false })
       .select({ _id: 1 });
 
     if (!collegeId) {

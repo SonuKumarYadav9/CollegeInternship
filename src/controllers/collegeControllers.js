@@ -22,20 +22,19 @@ const createCollege = async (req, res) => {
     let { name, fullName, logoLink } = data;
 
     let nameRegex = /^[a-zA-Z]{2,10}$/;
-    let fNameRegex = /^[.a-zA-Z\s,-]+$/ 
+    let fNameRegex = /^[.a-zA-Z\s,-]+$/;
 
-    
     if (!(isValid(name) && nameRegex.test(name))) {
       return res.status(400).send({
         status: false,
         message: "Please provide a valid name of the college 🚫",
       });
     }
-    
-    let space
-    if(typeof(fullName)=="string"){
-      fullName=fullName.trim()
-      space=fullName.match("  ")
+
+    let space;
+    if (typeof fullName == "string") {
+      fullName = fullName.trim();
+      space = fullName.match("  ");
     }
 
     if (!(isValid(fullName) && fNameRegex.test(fullName) && !space)) {
@@ -46,12 +45,10 @@ const createCollege = async (req, res) => {
     }
 
     if (!(isValid(logoLink) && validator.isURL(logoLink))) {
-      return res
-        .status(400)
-        .send({
-          status: false,
-          message: "Please provide valid link for the logo 🚫",
-        });
+      return res.status(400).send({
+        status: false,
+        message: "Please provide valid link for the logo 🚫",
+      });
     }
     if (!logoLink.match("http")) logoLink = "http://" + logoLink;
 
@@ -80,12 +77,10 @@ const getCollege = async (req, res) => {
     let key = Object.keys(data);
 
     if (!key.length) {
-      return res
-        .status(400)
-        .send({
-          status: false,
-          message: "Please provide valid query params 🚫",
-        });
+      return res.status(400).send({
+        status: false,
+        message: "Please provide valid query params 🚫",
+      });
     }
     if (key.length > 1) {
       return res.status(400).send({
@@ -94,17 +89,18 @@ const getCollege = async (req, res) => {
       });
     }
     if (!key.includes("collegeName")) {
-      return res
-        .status(400)
-        .send({
-          status: false,
-          message: "collegeName is missing in query params 🚫",
-        });
+      return res.status(400).send({
+        status: false,
+        message: "collegeName is missing in query params 🚫",
+      });
     }
 
     let value = data.collegeName;
 
-    let collegeData = await collegeModel.findOne({ name: value, isDeleted:false });
+    let collegeData = await collegeModel.findOne({
+      name: value,
+      isDeleted: false,
+    });
 
     if (!collegeData) {
       return res
@@ -114,7 +110,7 @@ const getCollege = async (req, res) => {
     const id = collegeData["_id"];
 
     let internData = await internModel
-      .find({ collegeId: id, isDeleted:false })
+      .find({ collegeId: id, isDeleted: false })
       .select({ name: 1, email: 1, mobile: 1 });
 
     const { name, fullName, logoLink } = collegeData;
