@@ -11,7 +11,7 @@ const createInterns = async (req, res) => {
   try {
     let data = req.body;
 
-    let nameRegex = /^[a-zA-Z]{3,20}$/
+    let nameRegex = /^[a-zA-Z]+\s?[a-zA-Z]{2,20}$/
     let mobileRegex=/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/
 
     if (!Object.keys(data).length) {

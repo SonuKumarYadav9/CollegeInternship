@@ -10,6 +10,7 @@ const collegeSchema = new mongoose.Schema(
     fullName: {
       type: String,
       required: "fullName is required",
+      trim: true
     },
     logoLink: {
       type: String,

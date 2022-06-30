@@ -1,6 +1,6 @@
 const validator = require("validator");
 const collegeModel = require("../models/collegeModel");
-const internModel = require("../models/internModel"); 
+const internModel = require("../models/internModel");
 
 const isValid = (ele) => {
   if (typeof ele == "string" && ele.trim().length) return true;
@@ -20,14 +20,11 @@ const createCollege = async (req, res) => {
     }
 
     let { name, fullName, logoLink } = data;
-    
-    name = name.trim()
-    fullName =fullName.trim()
 
-    let nameRegex = /^[a-zA-Z]{2,10}$/
-    let fNameRegex = /^[a-zA-Z]{10,120}$/
+    let nameRegex = /^[a-zA-Z]{2,10}$/;
+    let fNameRegex = /^[a-zA-Z]+\s?[a-zA-Z]{2,20}$/;
 
-    if (!(isValid(name) && nameRegex.test(name) && !name.match(" "))) {
+    if (!(isValid(name) && nameRegex.test(name))) {
       return res.status(400).send({
         status: false,
         message: "Please provide a valid name of the college 🚫",
@@ -44,8 +41,12 @@ const createCollege = async (req, res) => {
     if (!(isValid(logoLink) && validator.isURL(logoLink))) {
       return res
         .status(400)
-        .send({ status: false, message: "Please provide valid link for the logo 🚫" });
+        .send({
+          status: false,
+          message: "Please provide valid link for the logo 🚫",
+        });
     }
+    if (!logoLink.match("http")) logoLink = "http://" + logoLink;
 
     let checkName = await collegeModel.findOne({ name });
 
@@ -66,7 +67,6 @@ const createCollege = async (req, res) => {
   }
 };
 
-
 const getCollege = async (req, res) => {
   try {
     let data = req.query;
@@ -75,20 +75,24 @@ const getCollege = async (req, res) => {
     if (!key.length) {
       return res
         .status(400)
-        .send({ status: false, message: "Please provide valid query params 🚫" });
-    }
-    if (key.length > 1) {
-      return res
-        .status(400)
         .send({
           status: false,
-          message: "Only collegeName query parameter is accepted 🚫",
+          message: "Please provide valid query params 🚫",
         });
+    }
+    if (key.length > 1) {
+      return res.status(400).send({
+        status: false,
+        message: "Only collegeName query parameter is accepted 🚫",
+      });
     }
     if (!key.includes("collegeName")) {
       return res
         .status(400)
-        .send({ status: false, message: "collegeName is missing in query params 🚫" });
+        .send({
+          status: false,
+          message: "collegeName is missing in query params 🚫",
+        });
     }
 
     let value = data.collegeName;
