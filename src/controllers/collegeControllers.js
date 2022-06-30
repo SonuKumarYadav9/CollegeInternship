@@ -22,16 +22,23 @@ const createCollege = async (req, res) => {
     let { name, fullName, logoLink } = data;
 
     let nameRegex = /^[a-zA-Z]{2,10}$/;
-    let fNameRegex = /^[a-zA-Z]+\s?[a-zA-Z]{2,20}$/;
+    let fNameRegex = /^[.a-zA-Z\s,-]+$/ 
 
+    
     if (!(isValid(name) && nameRegex.test(name))) {
       return res.status(400).send({
         status: false,
         message: "Please provide a valid name of the college 🚫",
       });
     }
+    
+    let space
+    if(typeof(fullName)=="string"){
+      fullName=fullName.trim()
+      space=fullName.match("  ")
+    }
 
-    if (!(isValid(fullName) && fNameRegex.test(fullName))) {
+    if (!(isValid(fullName) && fNameRegex.test(fullName) && !space)) {
       return res.status(400).send({
         status: false,
         message: "Please provide valid fullName of the college 🚫",
@@ -97,17 +104,17 @@ const getCollege = async (req, res) => {
 
     let value = data.collegeName;
 
-    let collegeData = await collegeModel.findOne({ name: value });
+    let collegeData = await collegeModel.findOne({ name: value, isDeleted:false });
 
     if (!collegeData) {
       return res
-        .status(400)
+        .status(404)
         .send({ status: false, message: "No such college exists 🚫" });
     }
     const id = collegeData["_id"];
 
     let internData = await internModel
-      .find({ collegeId: id })
+      .find({ collegeId: id, isDeleted:false })
       .select({ name: 1, email: 1, mobile: 1 });
 
     const { name, fullName, logoLink } = collegeData;

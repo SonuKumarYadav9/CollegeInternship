@@ -11,7 +11,7 @@ const createInterns = async (req, res) => {
   try {
     let data = req.body;
 
-    let nameRegex = /^[a-zA-Z]+\s?[a-zA-Z]{2,20}$/
+    let nameRegex = /^[a-zA-Z]+\s?[a-zA-Z]+\s?[a-zA-Z]{1,20}$/
     let mobileRegex=/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/
 
     if (!Object.keys(data).length) {
@@ -50,7 +50,7 @@ const createInterns = async (req, res) => {
     let isDuplicateEmail = await internModel.findOne({ email });
 
     if (isDuplicateEmail) {
-      return res.status(400).send({
+      return res.status(409).send({
         status: false,
         message: "Email is already used. Please enter another email 🚫",
       });
@@ -59,7 +59,7 @@ const createInterns = async (req, res) => {
     let isDuplicateMobile = await internModel.findOne({ mobile });
 
     if (isDuplicateMobile) {
-      return res.status(400).send({
+      return res.status(409).send({
         status: false,
         message: "Phone number is already used. Please enter another number 🚫",
       });
@@ -69,7 +69,7 @@ const createInterns = async (req, res) => {
       .select({ _id: 1 });
 
     if (!collegeId) {
-      return res.status(400).send({
+      return res.status(404).send({
         status: false,
         message: "There is no college with this name 🚫",
       });
