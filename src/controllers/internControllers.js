@@ -65,7 +65,7 @@ const createInterns = async (req, res) => {
       });
     }
     let collegeId = await collegeModel
-      .findOne({ name: collegeName })
+      .findOne({ name: collegeName, isDeleted:false })
       .select({ _id: 1 });
 
     if (!collegeId) {
