@@ -22,7 +22,7 @@ const createInterns = async (req, res) => {
     }
     const { name, mobile, email, collegeName } = data;
 
-    if (!nameRegex.test(name)) {
+    if (!(isValid(name) && nameRegex.test(name))) {
       return res
         .status(400)
         .send({ status: false, message: "Please enter a valid Name 🚫" });
